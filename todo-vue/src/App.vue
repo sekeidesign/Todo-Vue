@@ -1,7 +1,6 @@
 <template>
-  <div id="app">
+  <div id="app" class="container">
     <img src="./assets/logo.png" class="logo">
-    <HelloWorld/>
     <TodoList/>
   </div>
 </template>
@@ -37,6 +36,7 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+  font-size: 18px;
 }
 
 .logo {
