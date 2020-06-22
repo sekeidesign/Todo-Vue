@@ -11,25 +11,8 @@
     </div>
     <input type="text" class="todo-input" placeholder="What needs to be done?" v-model="newTodo" @keyup.enter="addTodo">
     <transition-group name="todo-animation">
-      <div v-for="(todo, index) in todosFiltered" :key="todo.id" class="todo-item">
-        <div class="todo-item-left">
-          <input type="checkbox" v-model="todo.completed">
-          <div v-if="!todo.editing" class="todo-item-label" :class="{ 'todo-item-completed' : todo.completed }" @dblclick="editTodo(todo)">{{ todo.title }}</div>
-          <input 
-            v-else 
-            type="text" 
-            class="edit-input" 
-            v-model="todo.title" 
-            @blur="doneEdit(todo)" 
-            @keyup.enter="doneEdit(todo)" 
-            @keyup.esc="cancelEdit(todo)" 
-            v-focus
-          >
-        </div>
-        <div class="remove-item" @click="removeTodo(index)">
-          &times;
-        </div>
-      </div>
+      <todo-item v-for="(todo, index) in todosFiltered" :key="todo.id" class="todo-item">
+      </todo-item>
     </transition-group>
     <div class="bottom-extra-container">
       <button 
@@ -53,8 +36,13 @@
 </template>
 
 <script>
+import TodoItem from './TodoItem'
+
 export default {
   name: 'TodoList',
+  components: {
+    TodoItem,
+  },
   data () {
     return {
       newTodo: '',
