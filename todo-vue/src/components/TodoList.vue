@@ -11,7 +11,7 @@
     </div>
     <input type="text" class="todo-input" placeholder="What needs to be done?" v-model="newTodo" @keyup.enter="addTodo">
     <transition-group name="todo-animation">
-      <todo-item v-for="(todo, index) in todosFiltered" :key="todo.id" class="todo-item">
+      <todo-item v-for="(todo, index) in todosFiltered" :key="todo.id" class="todo-item" :todo="todo" :index="index">
       </todo-item>
     </transition-group>
     <div class="bottom-extra-container">
