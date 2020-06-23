@@ -7,7 +7,8 @@
         <button :class="{ active : filter === 'active' }" @click="filter = 'active'">Active</button>
         <button :class="{ active : filter === 'completed' }" @click="filter = 'completed'">Completed</button>
       </div>
-      <div class="remaining">{{ remaining }} items left</div>
+      <!-- <div class="remaining">{{ remaining }} items left</div> -->
+      <todo-items-remaining :remaining="remaining"></todo-items-remaining>
     </div>
     <input type="text" class="todo-input" placeholder="What needs to be done?" v-model="newTodo" @keyup.enter="addTodo">
     <transition-group name="todo-animation">
@@ -18,8 +19,6 @@
         :todo="todo" 
         :index="index"
         :checkAll="!remaining"
-        @removedTodo="removeTodo" 
-        @finishedEdit="finishedEdit"
       >
       </todo-item>
     </transition-group>
@@ -46,6 +45,7 @@
 
 <script>
 import TodoItem from './TodoItem'
+import TodoItemsRemaining from './TodoItemsRemaining'
 
 export default {
   name: 'TodoList',
@@ -73,6 +73,10 @@ export default {
         },
       ]
     }
+  },
+  created() {
+    eventBus.$on('removedTodo', (index) => this.removeTodo(index))
+    eventBus.$on('finishedEdit', (data) => this.finishedEdit(data))
   },
   computed: {
     remaining () {
