@@ -15,7 +15,6 @@
           >
         </div>
         <div>
-          <button @click="pluralize">Pluralize</button>
           <span class="remove-item" @click="removeTodo(index)">
             &times;
           </span>
@@ -99,21 +98,6 @@ export default {
         this.editing = false;
         this.title = this.beforeEditCache
       },
-      pluralize() {
-        eventBus.$emit('pluralize')
-      },
-      handlePluralize() {
-        this.title = this.title + 's'
-        eventBus.$emit('finishedEdit', {
-          'index': this.index,
-          'todo': {
-            'id': this.id,
-            'title': this.title,
-            'completed': this.completed,
-            'editing': this.editing,
-          }
-        })
-      }
     }
 }
 </script>
