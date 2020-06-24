@@ -15,7 +15,7 @@
           >
         </div>
         <div>
-          <span class="remove-item" @click="removeTodo(index)">
+          <span class="remove-item" @click="removeTodo(id)">
             &times;
           </span>
         </div>
@@ -28,10 +28,6 @@ export default {
     props: {
       todo: {
         type: Object,
-        required: true,
-      },
-      index: {
-        type: Number,
         required: true,
       },
       checkAll: {
@@ -48,19 +44,8 @@ export default {
         'beforeEditCache': this.todo.beforeEditCache
       }
     },
-    created() {
-      eventBus.$on('pluralize', this.handlePluralize)
-    },
-    beforeDestroy() {
-      eventBus.$on('pluralize', this.handlePluralize)
-    },
     watch: {
       checkAll () {
-        // if (this.checkAll) {
-        //   this.completed = true
-        // } else {
-        //   this.completed = this.todo.completed
-        // }
         this.completed = this.checkAll ? true : this.todo.completed
       }
     },
@@ -72,8 +57,9 @@ export default {
       }
     },
     methods: {
-      removeTodo(index) {
-        eventBus.$emit('removedTodo', index)
+      removeTodo(id) {
+        const index = this.$store.state.todos.findIndex(item => item.id == id);
+        this.$store.state.todos.splice(index, 1);
       },
       editTodo() {
         this.editing = true;
@@ -84,14 +70,12 @@ export default {
           this.title = this.beforeEditCache;
         }
         this.editing = false
-        eventBus.$emit('finishedEdit', {
-          'index': this.index,
-          'todo': {
-            'id': this.id,
-            'title': this.title,
-            'completed': this.completed,
-            'editing': this.editing,
-          }
+        const index = this.$store.state.todos.findIndex(item => item.id == this.id)
+        this.$store.state.todos.splice(index, 1, {
+          'id': this.id,
+          'title': this.title,
+          'completed': this.completed,
+          'editing': this.editing,
         })
       },
       cancelEdit() {

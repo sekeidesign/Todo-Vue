@@ -11,19 +11,17 @@
 <script>
 export default {
   name: 'todo-check-all',
-  props: {
-    remaining: {
-      type: Number,
-      required: true,
+  computed: {
+    remaining() {
+      return this.$store.getters.remaining
     },
-    isAllChecked: {
-      type: String,
-      required: true,
+    isAllChecked () {
+      return this.$store.getters.isAllChecked
     },
   },
   methods: {
     checkAll() {
-      eventBus.$emit('checkAllPressed')
+      this.$store.state.todos.forEach((todo) => todo.completed = true)
     }
   }
 }

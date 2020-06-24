@@ -7,19 +7,18 @@
     <input type="text" class="todo-input" placeholder="What needs to be done?" v-model="newTodo" @keyup.enter="addTodo">
     <transition-group name="todo-animation">
       <todo-item 
-        v-for="(todo, index) in todosFiltered" 
-        :key="todo.id" 
+        v-for="todo in todosFiltered" 
+        :key="todo.id"
         class="todo-item" 
-        :todo="todo" 
-        :index="index"
+        :todo="todo"
         :checkAll="!remaining"
       >
       </todo-item>
     </transition-group>
     <div class="bottom-extra-container">
-      <todo-check-all :remaining="remaining" :isAllChecked="isAllChecked" :checkAllTodos="checkAllTodos"></todo-check-all>
+      <todo-check-all :isAllChecked="isAllChecked" :checkAllTodos="checkAllTodos"></todo-check-all>
       <transition name="fade">
-        <todo-clear-completed :showClearCompleted="showClearCompleted"></todo-clear-completed>
+        <todo-clear-completed></todo-clear-completed>
       </transition>
     </div>
   </div>
@@ -48,20 +47,6 @@ export default {
       beforeEditCache: '',
     }
   },
-  created() {
-    eventBus.$on('removedTodo', (index) => this.removeTodo(index))
-    eventBus.$on('finishedEdit', (data) => this.finishedEdit(data))
-    eventBus.$on('checkAllPressed', () => this.checkAllTodos())
-    eventBus.$on('filterChanged', (filter) => this.$store.state.filter = filter)
-    eventBus.$on('clearCompleted', () => this.clearCompleted())
-  },
-  beforeDestroy() {
-    eventBus.$off('removedTodo', (index) => this.removeTodo(index))
-    eventBus.$off('finishedEdit', (data) => this.finishedEdit(data))
-    eventBus.$off('checkAllPressed', () => this.checkAllTodos())
-    eventBus.$off('filterChanged', (filter) => this.$store.state.filter = filter)
-    eventBus.$off('clearCompleted', () => this.clearCompleted())
-  },
   computed: {
     remaining (state) {
       return this.$store.getters.remaining
@@ -81,11 +66,9 @@ export default {
       if (this.newTodo.trim().length === 0){
         return
       }
-      this.$store.state.todos.push({
+      this.$store.commit('addTodo', {
         id: this.idForTodo,
         title: this.newTodo,
-        completed: false,
-        editing: false,
       })
 
       this.newTodo = '',
@@ -95,19 +78,20 @@ export default {
       todo.editing = true;
       this.beforeEditCache = todo.title;
     },
-    removeTodo(index) {
-      this.$store.state.todos.splice(index, 1);
-    },
+    // removeTodo(id) {
+    //   const index = this.$store.state.todos.findIndex(item => item.id == id);
+    //   this.$store.state.todos.splice(index, 1);
+    // },
     checkAllTodos () {
       this.$store.state.todos.forEach((todo) => todo.completed = true)
     },
     clearCompleted () {
       this.$store.state.todos = this.$store.state.todos.filter(todo => !todo.completed)
     },
-    finishedEdit (data) {
-      const index = this.$store.state.todos.findIndex(item => item.id == data.id)
-      this.$store.state.todos.splice(index, 1, data)
-    }
+    // finishedEdit (data) {
+    //   const index = this.$store.state.todos.findIndex(item => item.id == data.id)
+    //   this.$store.state.todos.splice(index, 1, data)
+    // }
   }
 }
 </script>
