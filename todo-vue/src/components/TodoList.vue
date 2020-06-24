@@ -52,38 +52,28 @@ export default {
     eventBus.$on('removedTodo', (index) => this.removeTodo(index))
     eventBus.$on('finishedEdit', (data) => this.finishedEdit(data))
     eventBus.$on('checkAllPressed', () => this.checkAllTodos())
-    eventBus.$on('filterChanged', (filter) => this.filter = filter)
+    eventBus.$on('filterChanged', (filter) => this.$store.state.filter = filter)
     eventBus.$on('clearCompleted', () => this.clearCompleted())
   },
   beforeDestroy() {
     eventBus.$off('removedTodo', (index) => this.removeTodo(index))
     eventBus.$off('finishedEdit', (data) => this.finishedEdit(data))
     eventBus.$off('checkAllPressed', () => this.checkAllTodos())
-    eventBus.$off('filterChanged', (filter) => this.filter = filter)
+    eventBus.$off('filterChanged', (filter) => this.$store.state.filter = filter)
     eventBus.$off('clearCompleted', () => this.clearCompleted())
   },
   computed: {
-    remaining () {
-      return this.todos.filter(todo => !todo.completed).length;
+    remaining (state) {
+      return this.$store.getters.remaining
     },
-    isAllChecked () {
-      if (this.remaining > 0) {
-        return 'Check All'
-      } else {
-        return 'All done!'
-      }
+    isAllChecked (state, getters) {
+      return this.$store.getters.isAllChecked
     },
-    todosFiltered () {
-      if (this.filter === 'active') {
-        return this.todos.filter(todo => !todo.completed);
-      } else if (this.filter === 'completed') {
-        return this.todos.filter(todo => todo.completed);
-      } else {
-        return this.todos
-      }
+    todosFiltered (state) {
+      return this.$store.getters.todosFiltered
     },
-    showClearCompleted () {
-      return this.todos.filter(todo => todo.completed).length > 0;
+    showClearCompleted (state) {
+      return this.$store.getters.showClearCompleted
     }
   },
   methods: {
@@ -91,7 +81,7 @@ export default {
       if (this.newTodo.trim().length === 0){
         return
       }
-      this.todos.push({
+      this.$store.state.todos.push({
         id: this.idForTodo,
         title: this.newTodo,
         completed: false,
@@ -106,16 +96,17 @@ export default {
       this.beforeEditCache = todo.title;
     },
     removeTodo(index) {
-      this.todos.splice(index, 1);
+      this.$store.state.todos.splice(index, 1);
     },
     checkAllTodos () {
-      this.todos.forEach((todo) => todo.completed = true)
+      this.$store.state.todos.forEach((todo) => todo.completed = true)
     },
     clearCompleted () {
-      this.todos = this.todos.filter(todo => !todo.completed)
+      this.$store.state.todos = this.$store.state.todos.filter(todo => !todo.completed)
     },
     finishedEdit (data) {
-      this.todos.splice(data.index, 1, data.todo)
+      const index = this.$store.state.todos.findIndex(item => item.id == data.id)
+      this.$store.state.todos.splice(index, 1, data)
     }
   }
 }

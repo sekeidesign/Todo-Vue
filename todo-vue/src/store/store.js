@@ -20,5 +20,29 @@ export const store = new Vuex.Store({
         'editing': false,
       },
     ]
+  },
+  getters: {
+    remaining (state) {
+      return state.todos.filter(todo => !todo.completed).length;
+    },
+    isAllChecked (state, getters) {
+      if (getters.remaining > 0) {
+        return 'Check All'
+      } else {
+        return 'All done!'
+      }
+    },
+    todosFiltered (state) {
+      if (state.filter === 'active') {
+        return state.todos.filter(todo => !todo.completed);
+      } else if (state.filter === 'completed') {
+        return state.todos.filter(todo => todo.completed);
+      } else {
+        return state.todos
+      }
+    },
+    showClearCompleted (state) {
+      return state.todos.filter(todo => todo.completed).length > 0;
+    }
   }
 }) 
