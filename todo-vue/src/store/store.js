@@ -53,6 +53,50 @@ export const store = new Vuex.Store({
         'completed': false,
         'editing': false,
       })
-    }
+    },
+    clearCompleted(state) {
+      state.todos = state.todos.filter(todo => !todo.completed)
+    },
+    updateFilter(state, filter) {
+      state.filter = filter
+    },
+    checkAll(state) {
+      state.todos.forEach((todo) => todo.completed = true)
+    },
+    deleteTodo(state, id) {
+      const index = state.todos.findIndex(item => item.id == id);
+      state.todos.splice(index, 1);
+    },
+    updateTodo(state, todo) {
+      const index = state.todos.findIndex(item => item.id == todo.id)
+      state.todos.splice(index, 1, {
+        'id': todo.id,
+        'title': todo.title,
+        'completed': todo.completed,
+        'editing': todo.editing,
+      })
+    },
   },
+  actions: {
+    addTodo(context, todo) {
+      setTimeout(() => {
+        context.commit('addTodo', todo)
+      }, 500);
+    },
+    clearCompleted(context) {
+      context.commit('clearCompleted')
+    },
+    updateFilter(context, filter) {
+      context.commit('updateFilter', filter)
+    },
+    checkAll(context, checked) {
+      context.commit('checkAll', checked)
+    },
+    deleteTodo(context, id) {
+      context.commit('deleteTodo', id)
+    },
+    updateTodo(context, todo) {
+      context.commit('updateTodo', todo)
+    },
+  }
 }) 

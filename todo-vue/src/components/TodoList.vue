@@ -66,7 +66,7 @@ export default {
       if (this.newTodo.trim().length === 0){
         return
       }
-      this.$store.commit('addTodo', {
+      this.$store.dispatch('addTodo', {
         id: this.idForTodo,
         title: this.newTodo,
       })
@@ -78,20 +78,9 @@ export default {
       todo.editing = true;
       this.beforeEditCache = todo.title;
     },
-    // removeTodo(id) {
-    //   const index = this.$store.state.todos.findIndex(item => item.id == id);
-    //   this.$store.state.todos.splice(index, 1);
-    // },
     checkAllTodos () {
       this.$store.state.todos.forEach((todo) => todo.completed = true)
     },
-    clearCompleted () {
-      this.$store.state.todos = this.$store.state.todos.filter(todo => !todo.completed)
-    },
-    // finishedEdit (data) {
-    //   const index = this.$store.state.todos.findIndex(item => item.id == data.id)
-    //   this.$store.state.todos.splice(index, 1, data)
-    // }
   }
 }
 </script>

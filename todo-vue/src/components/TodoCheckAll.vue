@@ -21,7 +21,7 @@ export default {
   },
   methods: {
     checkAll() {
-      this.$store.state.todos.forEach((todo) => todo.completed = true)
+      this.$store.dispatch('checkAll', event.target.checked)
     }
   }
 }

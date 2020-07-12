@@ -58,8 +58,7 @@ export default {
     },
     methods: {
       removeTodo(id) {
-        const index = this.$store.state.todos.findIndex(item => item.id == id);
-        this.$store.state.todos.splice(index, 1);
+        this.$store.dispatch('deleteTodo', id)
       },
       editTodo() {
         this.editing = true;
@@ -70,13 +69,13 @@ export default {
           this.title = this.beforeEditCache;
         }
         this.editing = false
-        const index = this.$store.state.todos.findIndex(item => item.id == this.id)
-        this.$store.state.todos.splice(index, 1, {
+        this.$store.dispatch('updateTodo', {
           'id': this.id,
           'title': this.title,
           'completed': this.completed,
           'editing': this.editing,
         })
+
       },
       cancelEdit() {
         this.editing = false;
